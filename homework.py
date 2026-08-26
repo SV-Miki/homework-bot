@@ -193,12 +193,7 @@ def handle_homework(
 ) -> bool:
     """Обрабатывает домашнюю работу и отправляет сообщение."""
     message = parse_status(homework)
-
-    if send_message(bot, message):
-        return True
-
-    logger.error("Не удалось отправить уведомление в Telegram")
-    return False
+    return send_message(bot, message)
 
 
 def handle_error(
@@ -244,22 +239,10 @@ def main() -> None:
 
             last_error_message = None
 
-        except (
-            APIError,
-            ResponseError,
-            StatusError,
-            TypeError,
-            KeyError,
-        ) as error:
+        except Exception as error:
             last_error_message = handle_error(
                 bot,
                 error,
-                last_error_message,
-            )
-        except Exception as unexpected:
-            last_error_message = handle_error(
-                bot,
-                unexpected,
                 last_error_message,
             )
         finally:
